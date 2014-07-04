@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -40,14 +39,14 @@ public class ChannelsStorage {
 
 	private HashMap<String, ChannelData> channels = new HashMap<String, ChannelData>();
 	private HashMap<UUID, PlayerData> players = new HashMap<UUID, PlayerData>();
-	private HashSet<String> defaultChannels = new HashSet<String>();
+	private List<String> defaultChannels = new ArrayList<String>();
 
 	public void loadDefaultChannels() {
 		File configfile = new File(plugin.getDataFolder(), "config.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(configfile);
 		defaultChannels.addAll(config.getStringList("defaultchannels"));
 		config = new YamlConfiguration();
-		config.set("defaultchannels", new ArrayList<String>(defaultChannels));
+		config.set("defaultchannels", defaultChannels);
 		try {
 			config.save(configfile);
 		} catch (IOException e) {
@@ -127,7 +126,7 @@ public class ChannelsStorage {
 	public void addToDefaultChannels(UUID uuid) {
 		PlayerData data = new PlayerData();
 		if (!defaultChannels.isEmpty()) {
-			data.setCurrentChannel(defaultChannels.iterator().next());
+			data.setCurrentChannel(defaultChannels.get(0));
 		}
 		players.put(uuid, data);
 		for (String channelName : defaultChannels) {
