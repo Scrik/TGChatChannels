@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 public class ChannelsStorage {
 
@@ -86,6 +88,11 @@ public class ChannelsStorage {
 				PlayerData data = new PlayerData();
 				data.setCurrentChannel(playersData.getString(playerUUIDString+".channel"));
 				players.put(uuid, data);
+			}
+		}
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			if (!isPlayerDataExist(player.getUniqueId())) {
+				addToDefaultChannels(player.getUniqueId());
 			}
 		}
 	}
