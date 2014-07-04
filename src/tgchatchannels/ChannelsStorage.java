@@ -57,6 +57,9 @@ public class ChannelsStorage {
 	public void load() {
 		File configfile = new File(plugin.getDataFolder(), "data.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(configfile);
+		for (String defualtChannel : defaultChannels) {
+			channels.put(defualtChannel, new ChannelData());
+		}
 		ConfigurationSection channelsData = config.getConfigurationSection("channels");
 		if (channelsData != null) {
 			for (String channelName : channelsData.getKeys(false)) {
@@ -74,7 +77,7 @@ public class ChannelsStorage {
 				for (String playerUUIDString : channelsData.getStringList(channelName+".players")) {
 					data.addPlayer(UUID.fromString(playerUUIDString));
 				}
-				this.channels.put(channelName, data);
+				channels.put(channelName, data);
 			}
 		}
 		ConfigurationSection playersData = config.getConfigurationSection("players");
