@@ -1,0 +1,8 @@
+name: TGChatChannels
+main: tgchatchannels.TGChatChannels
+version: 1.0
+author: _Shevchik_
+load: STARTUP
+commands:
+  tgchat:
+    description: All TGChatChannels Commands

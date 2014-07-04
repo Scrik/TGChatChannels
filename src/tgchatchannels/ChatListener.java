@@ -32,6 +32,10 @@ public class ChatListener implements Listener {
 
 	private ChannelsStorage storage;
 
+	public ChatListener(ChannelsStorage storage) {
+		this.storage = storage;
+	}
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncChat(AsyncPlayerChatEvent event) {
 		UUID playerUUID = event.getPlayer().getUniqueId();

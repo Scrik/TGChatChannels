@@ -21,4 +21,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TGChatChannels extends JavaPlugin {
 
+	private ChannelsStorage storage;
+
+	@Override
+	public void onEnable() {
+		storage = new ChannelsStorage(this);
+		storage.loadDefaultChannels();
+		storage.load();
+		getServer().getPluginManager().registerEvents(new ChatListener(storage), this);
+	}
+
+	@Override
+	public void onDisable() {
+		storage.save();
+		storage = null;
+	}
+
 }
