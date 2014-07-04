@@ -26,6 +26,8 @@ public class ChannelData {
 	private boolean privateChannel = true;
 	private HashSet<UUID> players = new HashSet<UUID>();
 
+	private HashSet<UUID> invites = new HashSet<UUID>();
+
 	protected ChannelData() {
 		privateChannel = false;
 	}
@@ -68,6 +70,14 @@ public class ChannelData {
 
 	protected HashSet<UUID> getPlayers() {
 		return players;
+	}
+
+	public void invite(UUID uuid) {
+		invites.add(uuid);
+	}
+
+	public boolean isInvited(UUID uuid) {
+		return invites.contains(uuid);
 	}
 
 }
