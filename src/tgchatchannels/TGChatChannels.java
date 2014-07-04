@@ -29,6 +29,7 @@ public class TGChatChannels extends JavaPlugin {
 		storage.loadDefaultChannels();
 		storage.load();
 		getServer().getPluginManager().registerEvents(new ChatListener(storage), this);
+		getCommand("tgchat").setExecutor(new Commands(storage));
 	}
 
 	@Override

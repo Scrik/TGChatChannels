@@ -29,6 +29,10 @@ public class Commands implements CommandExecutor {
 
 	private ChannelsStorage storage;
 
+	public Commands(ChannelsStorage storage) {
+		this.storage = storage;
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
