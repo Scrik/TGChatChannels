@@ -111,6 +111,10 @@ public class ChannelsStorage {
 		}
 	}
 
+	public boolean isPlayerDataExist(UUID playerUUID) {
+		return players.containsKey(playerUUID);
+	}
+
 	public PlayerData getPlayerData(UUID playerUUID) {
 		return players.get(playerUUID);
 	}

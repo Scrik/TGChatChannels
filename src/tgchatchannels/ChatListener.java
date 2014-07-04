@@ -64,7 +64,7 @@ public class ChatListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		if (!event.getPlayer().hasPlayedBefore()) {
+		if (!storage.isPlayerDataExist(event.getPlayer().getUniqueId())) {
 			storage.addToDefaultChannels(event.getPlayer().getUniqueId());
 		}
 	}
