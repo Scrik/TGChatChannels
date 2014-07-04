@@ -53,6 +53,11 @@ public class ChatListener implements Listener {
 		}
 		event.setFormat("["+channelName+"] "+event.getFormat());
 		ChannelData currentChannel = storage.getChannelData(channelName);
+		if (!currentChannel.isInChannel(playerUUID)) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете говорить в канал в котором вы не находитесь");
+			return;		
+		}
 		Iterator<Player> recipientsIt = event.getRecipients().iterator();
 		while (recipientsIt.hasNext()) {
 			UUID uuid = recipientsIt.next().getUniqueId();
