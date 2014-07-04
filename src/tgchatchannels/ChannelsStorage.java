@@ -67,7 +67,7 @@ public class ChannelsStorage {
 				if (uuidstring == null) {
 					data = new ChannelData();
 				} else {
-					data = new ChannelData(UUID.fromString(uuidstring)); 
+					data = new ChannelData(UUID.fromString(uuidstring));
 				}
 				boolean privateChannel = channelsData.getBoolean(channelName+".private", false);
 				if (!privateChannel) {

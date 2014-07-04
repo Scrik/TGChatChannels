@@ -51,7 +51,7 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "Вы уже в этом канале");
 				return true;
 			}
-			if (data.isPrivate() && ! data.isInvited(uuid)) {
+			if (data.isPrivate() && !data.isInvited(uuid)) {
 				player.sendMessage(ChatColor.RED + "Вы не приглашены в данный канал");
 				return true;
 			}
