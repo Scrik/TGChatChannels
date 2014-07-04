@@ -27,6 +27,7 @@ public class ChannelData {
 	private HashSet<UUID> players = new HashSet<UUID>();
 
 	protected ChannelData() {
+		privateChannel = false;
 	}
 
 	public ChannelData(UUID owner) {
