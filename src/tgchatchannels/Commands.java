@@ -76,6 +76,14 @@ public class Commands implements CommandExecutor {
 			data.removePlayer(uuid);
 			player.sendMessage(ChatColor.BLUE + "Вы покинули канал "+channelName);
 			return true;
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("switch")) {
+			String channelName = args[1];
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			storage.getPlayerData(uuid).setCurrentChannel(channelName);
+			player.sendMessage(ChatColor.BLUE + "Теперь вы говорите в канал "+channelName);
 		}
 		return false;
 	}
