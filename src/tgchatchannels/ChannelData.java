@@ -65,4 +65,8 @@ public class ChannelData {
 		players.remove(player);
 	}
 
+	protected HashSet<UUID> getPlayers() {
+		return players;
+	}
+
 }

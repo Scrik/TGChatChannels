@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,8 +39,8 @@ public class ChannelsStorage {
 	}
 
 	private HashMap<String, ChannelData> channels = new HashMap<String, ChannelData>();
+	private HashMap<UUID, PlayerData> players = new HashMap<UUID, PlayerData>();
 	private HashSet<String> defaultChannels = new HashSet<String>();
-	private HashMap<UUID, PlayerData> playersData = new HashMap<UUID, PlayerData>();
 
 	public void loadDefaultChannels() {
 		File configfile = new File(plugin.getDataFolder(), "config.yml");
@@ -55,42 +57,62 @@ public class ChannelsStorage {
 	public void load() {
 		File configfile = new File(plugin.getDataFolder(), "data.yml");
 		FileConfiguration config = YamlConfiguration.loadConfiguration(configfile);
-		ConfigurationSection channels = config.getConfigurationSection("channels");
-		if (channels != null) {
-			for (String channelName : channels.getKeys(false)) {
+		ConfigurationSection channelsData = config.getConfigurationSection("channels");
+		if (channelsData != null) {
+			for (String channelName : channelsData.getKeys(false)) {
 				ChannelData data = null;
-				String uuidstring = channels.getString(channelName+".owner", null);
+				String uuidstring = channelsData.getString(channelName+".owner", null);
 				if (uuidstring == null) {
 					data = new ChannelData();
 				} else {
 					data = new ChannelData(UUID.fromString(uuidstring)); 
 				}
-				boolean privateChannel = channels.getBoolean(channelName+".private", false);
+				boolean privateChannel = channelsData.getBoolean(channelName+".private", false);
 				if (!privateChannel) {
 					data.setPublic();
 				}
-				for (String playerUUIDString : channels.getStringList(channelName+".players")) {
+				for (String playerUUIDString : channelsData.getStringList(channelName+".players")) {
 					data.addPlayer(UUID.fromString(playerUUIDString));
 				}
+				this.channels.put(channelName, data);
 			}
 		}
-		ConfigurationSection players = config.getConfigurationSection("players");
-		if (players != null) {
-			for (String playerUUIDString : players.getKeys(false)) {
+		ConfigurationSection playersData = config.getConfigurationSection("players");
+		if (playersData != null) {
+			for (String playerUUIDString : playersData.getKeys(false)) {
 				UUID uuid = UUID.fromString(playerUUIDString);
 				PlayerData data = new PlayerData();
-				data.setCurrentChannel(players.getString(playerUUIDString+".channel"));
-				playersData.put(uuid, data);
+				data.setCurrentChannel(playersData.getString(playerUUIDString+".channel"));
+				players.put(uuid, data);
 			}
 		}
 	}
 
 	public void save() {
-		
+		File configfile = new File(plugin.getDataFolder(), "data.yml");
+		FileConfiguration config = new YamlConfiguration();
+		ConfigurationSection channelsData = config.createSection("channels");
+		for (Entry<String, ChannelData> entry : channels.entrySet()) {
+			channelsData.set(entry.getKey()+".owner", entry.getValue().getOwner().toString());
+			channelsData.set(entry.getKey()+".private", entry.getValue().isPrivate());
+			List<String> cplayers = new ArrayList<String>();
+			for (UUID player : entry.getValue().getPlayers()) {
+				cplayers.add(player.toString());
+			}
+			channelsData.set(entry.getKey()+".players", cplayers);
+		}
+		ConfigurationSection playersData = config.createSection("players");
+		for (Entry<UUID, PlayerData> entry : players.entrySet()) {
+			playersData.set(entry.getKey()+".channel", entry.getValue().getCurrentChannel());
+		}
+		try {
+			config.save(configfile);
+		} catch (IOException e) {
+		}
 	}
 
 	public PlayerData getPlayerData(UUID playerUUID) {
-		return playersData.get(playerUUID);
+		return players.get(playerUUID);
 	}
 
 	public void addToDefaultChannels(UUID uuid) {
@@ -98,7 +120,7 @@ public class ChannelsStorage {
 		if (!defaultChannels.isEmpty()) {
 			data.setCurrentChannel(defaultChannels.iterator().next());
 		}
-		playersData.put(uuid, data);
+		players.put(uuid, data);
 		for (String channelName : defaultChannels) {
 			if (channels.containsKey(channelName)) {
 				channels.get(channelName).addPlayer(uuid);
