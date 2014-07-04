@@ -56,7 +56,7 @@ public class ChatListener implements Listener {
 		Iterator<Player> recipientsIt = event.getRecipients().iterator();
 		while (recipientsIt.hasNext()) {
 			UUID uuid = recipientsIt.next().getUniqueId();
-			if (!currentChannel.isInChannel(uuid)) {
+			if (!currentChannel.isInChannel(uuid) && !currentChannel.isOwner(playerUUID)) {
 				recipientsIt.remove();
 			}
 		}
