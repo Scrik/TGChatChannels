@@ -96,7 +96,9 @@ public class ChannelsStorage {
 		FileConfiguration config = new YamlConfiguration();
 		ConfigurationSection channelsData = config.createSection("channels");
 		for (Entry<String, ChannelData> entry : channels.entrySet()) {
-			channelsData.set(entry.getKey()+".owner", entry.getValue().getOwner().toString());
+			if (entry.getValue().getOwner() != null) {
+				channelsData.set(entry.getKey()+".owner", entry.getValue().getOwner().toString());
+			}
 			channelsData.set(entry.getKey()+".private", entry.getValue().isPrivate());
 			List<String> cplayers = new ArrayList<String>();
 			for (UUID player : entry.getValue().getPlayers()) {
