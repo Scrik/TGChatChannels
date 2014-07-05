@@ -92,10 +92,15 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "У вас нет прав на создание каналов");
 				return true;
 			}
+			if (storage.getPlayerData(uuid).ownsChannel()) {
+				player.sendMessage(ChatColor.RED + "Вы уже создали канал");
+				return true;
+			}
 			if (storage.channelExists(channelName)) {
 				player.sendMessage(ChatColor.RED + "Такой канал уже существует");
 				return true;
 			}
+			storage.getPlayerData(uuid).setOwnsChannel(true);
 			storage.addChannel(uuid, channelName);
 			player.sendMessage(ChatColor.BLUE + "Вы создали канал "+channelName);
 			return true;
@@ -110,6 +115,7 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
 				return true;
 			}
+			storage.getPlayerData(uuid).setOwnsChannel(false);
 			storage.removeChannel(channelName);
 			player.sendMessage(ChatColor.BLUE + "Вы удалили канал "+channelName);
 			return true;

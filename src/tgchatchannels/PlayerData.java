@@ -21,12 +21,22 @@ public class PlayerData {
 
 	private String currentChannel;
 
+	private boolean ownsChannel = false;
+
 	public String getCurrentChannel() {
 		return currentChannel;
 	}
 
 	public void setCurrentChannel(String channelName) {
 		this.currentChannel = channelName;
+	}
+
+	public boolean ownsChannel() {
+		return ownsChannel;
+	}
+
+	public void setOwnsChannel(boolean ownschannel) {
+		this.ownsChannel = ownschannel;
 	}
 
 }
