@@ -138,6 +138,25 @@ public class Commands implements CommandExecutor {
 			data.invite(inviting.getUniqueId());
 			player.sendMessage(ChatColor.BLUE + "Вы пригласили игрока "+playername+" в канал "+channelName);
 			return true;
+		} else if (args.length == 3 && args[0].equalsIgnoreCase("kick")) {
+			String channelName = args[1];
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			ChannelData data = storage.getChannelData(channelName);
+			if (!data.isOwner(uuid)) {
+				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
+				return true;
+			}
+			String playername = args[2];
+			Player tokick = Bukkit.getPlayerExact(playername);
+			if (tokick == null) {
+				player.sendMessage(ChatColor.RED + "Данный игрок не найден");
+			}
+			data.removePlayer(tokick.getUniqueId());
+			player.sendMessage(ChatColor.BLUE + "Вы кикнули игрока "+playername+" из канала "+channelName);
+			return true;
 		} else if (args.length == 2 && args[0].equalsIgnoreCase("public")) {
 			String channelName = args[1];
 			if (!player.hasPermission("tgchat.public")) {
