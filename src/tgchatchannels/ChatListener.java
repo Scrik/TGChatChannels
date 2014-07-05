@@ -53,7 +53,7 @@ public class ChatListener implements Listener {
 		}
 		event.setFormat("["+channelName+"] "+event.getFormat());
 		ChannelData currentChannel = storage.getChannelData(channelName);
-		if (!currentChannel.isInChannel(playerUUID)) {
+		if (!currentChannel.isInChannel(playerUUID) && !currentChannel.isOwner(playerUUID)) {
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED + "Вы не можете говорить в канал в котором вы не находитесь");
 			return;
