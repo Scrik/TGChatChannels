@@ -19,6 +19,7 @@ package tgchatchannels;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,6 +34,7 @@ public class Commands implements CommandExecutor {
 		this.storage = storage;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
@@ -84,6 +86,83 @@ public class Commands implements CommandExecutor {
 			}
 			storage.getPlayerData(uuid).setCurrentChannel(channelName);
 			player.sendMessage(ChatColor.BLUE + "Теперь вы говорите в канал "+channelName);
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
+			String channelName = args[1];
+			if (!player.hasPermission("tgchat.create")) {
+				player.sendMessage(ChatColor.RED + "У вас нет прав на создание каналов");
+				return true;
+			}
+			if (storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Такой канал уже существует");
+				return true;
+			}
+			storage.addChannel(uuid, channelName);
+			player.sendMessage(ChatColor.BLUE + "Вы создали канал "+channelName);
+			return true;
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("remove")) {
+			String channelName = args[1];
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			ChannelData data = storage.getChannelData(channelName);
+			if (!data.isOwner(uuid)) {
+				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
+				return true;
+			}
+			storage.removeChannel(channelName);
+			player.sendMessage(ChatColor.BLUE + "Вы удалили канал "+channelName);
+			return true;
+		} else if (args.length == 3 && args[0].equalsIgnoreCase("invite")) {
+			String channelName = args[1];
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			ChannelData data = storage.getChannelData(channelName);
+			if (!data.isOwner(uuid)) {
+				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
+				return true;
+			}
+			Player inviting = Bukkit.getPlayerExact(args[1]);
+			if (inviting == null) {
+				player.sendMessage(ChatColor.RED + "Данный игрок не найден");
+			}
+			data.invite(inviting.getUniqueId());
+			player.sendMessage(ChatColor.BLUE + "Вы пригласили игрока "+args[1]+" в канал "+channelName);
+			return true;
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("public")) {
+			String channelName = args[1];
+			if (!player.hasPermission("tgchat.public")) {
+				player.sendMessage(ChatColor.RED + "У вас нет прав на переключение каналов в публичный режим");
+				return true;
+			}
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			ChannelData data = storage.getChannelData(channelName);
+			if (!data.isOwner(uuid)) {
+				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
+				return true;
+			}
+			data.setPublic();
+			player.sendMessage(ChatColor.BLUE + "Вы сделали публичным канал "+channelName);
+			return true;
+		} else if (args.length == 2 && args[0].equalsIgnoreCase("private")) {
+			String channelName = args[1];
+			if (!storage.channelExists(channelName)) {
+				player.sendMessage(ChatColor.RED + "Этот канал не существует");
+				return true;
+			}
+			ChannelData data = storage.getChannelData(channelName);
+			if (!data.isOwner(uuid)) {
+				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
+				return true;
+			}
+			data.setPrivate();
+			player.sendMessage(ChatColor.BLUE + "Вы сделали приватным канал "+channelName);
+			return true;
 		}
 		return false;
 	}
