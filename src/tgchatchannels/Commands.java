@@ -130,12 +130,13 @@ public class Commands implements CommandExecutor {
 				player.sendMessage(ChatColor.RED + "Вы не владелец данного канала");
 				return true;
 			}
-			Player inviting = Bukkit.getPlayerExact(args[1]);
+			String playername = args[2];
+			Player inviting = Bukkit.getPlayerExact(playername);
 			if (inviting == null) {
 				player.sendMessage(ChatColor.RED + "Данный игрок не найден");
 			}
 			data.invite(inviting.getUniqueId());
-			player.sendMessage(ChatColor.BLUE + "Вы пригласили игрока "+args[1]+" в канал "+channelName);
+			player.sendMessage(ChatColor.BLUE + "Вы пригласили игрока "+playername+" в канал "+channelName);
 			return true;
 		} else if (args.length == 2 && args[0].equalsIgnoreCase("public")) {
 			String channelName = args[1];
