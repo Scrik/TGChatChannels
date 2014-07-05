@@ -134,6 +134,7 @@ public class Commands implements CommandExecutor {
 			Player inviting = Bukkit.getPlayerExact(playername);
 			if (inviting == null) {
 				player.sendMessage(ChatColor.RED + "Данный игрок не найден");
+				return true;
 			}
 			data.invite(inviting.getUniqueId());
 			player.sendMessage(ChatColor.BLUE + "Вы пригласили игрока "+playername+" в канал "+channelName);
@@ -153,6 +154,7 @@ public class Commands implements CommandExecutor {
 			Player tokick = Bukkit.getPlayerExact(playername);
 			if (tokick == null) {
 				player.sendMessage(ChatColor.RED + "Данный игрок не найден");
+				return true;
 			}
 			data.removePlayer(tokick.getUniqueId());
 			player.sendMessage(ChatColor.BLUE + "Вы кикнули игрока "+playername+" из канала "+channelName);
