@@ -87,6 +87,7 @@ public class ChannelsStorage {
 				UUID uuid = UUID.fromString(playerUUIDString);
 				PlayerData data = new PlayerData();
 				data.setCurrentChannel(playersData.getString(playerUUIDString+".channel"));
+				data.setOwnsChannel(playersData.getBoolean(playerUUIDString+".ownschannel", false));
 				players.put(uuid, data);
 			}
 		}
@@ -115,6 +116,7 @@ public class ChannelsStorage {
 		ConfigurationSection playersData = config.createSection("players");
 		for (Entry<UUID, PlayerData> entry : players.entrySet()) {
 			playersData.set(entry.getKey()+".channel", entry.getValue().getCurrentChannel());
+			playersData.set(entry.getKey()+".ownschannel", entry.getValue().ownsChannel());
 		}
 		try {
 			config.save(configfile);
