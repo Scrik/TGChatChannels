@@ -6,4 +6,4 @@ load: STARTUP
 commands:
   tgchat:
     description: All TGChatChannels Commands
-    aliases: channel
+    aliases: channel, c
